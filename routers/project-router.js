@@ -60,4 +60,26 @@ router.post("/newtask", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+router.get("/resources", (req, res) => {
+  db("resources")
+    .select("project_id", "res_name", "res_desc")
+    .then((e) => res.json(e))
+    .catch((e) => res.json(e));
+});
+
+router.post("/newrec", (req, res) => {
+  db("resources")
+    .insert(req.body)
+    .then((ids) => {
+      const id = ids[0];
+      db("resources")
+        .where({ id })
+        .first()
+        .then((e) => {
+          res.json(e);
+        });
+    })
+    .catch((err) => console.log(err));
+});
+
 module.exports = router;
